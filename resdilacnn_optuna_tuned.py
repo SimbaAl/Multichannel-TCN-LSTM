@@ -22,7 +22,7 @@ from torch.nn.utils import weight_norm as legacy_weight_norm
 # =========================
 SNR_index = np.arange(0, 45, 5)
 train_rate = 0.75
-USE_MASKED_LOSS = False  # False = paper-style (all 52); True = data-only (48 tones)
+USE_MASKED_LOSS = False  # False = paper-style (all 52); True = data-only (48 subcarriers)
 
 # Data subcarrier mask (Python 0-based)
 DSC_IDX = np.array(
@@ -33,10 +33,6 @@ DSC_IDX = np.array(
     dtype=int
 )
 
-# =========================
-# OPTIMAL hyperparameters from Optuna
-# Trial 159 | Val Loss: 0.002441 | 28.62 hours (163 trials)
-# =========================
 BEST_BATCH_SIZE = 128
 BEST_LR = 0.00047723253464726804
 BEST_N_BLOCKS = 5
@@ -49,24 +45,6 @@ BEST_GAMMA = 0.9477107033183908
 
 # Derived
 BEST_DILATIONS = tuple(2 ** i for i in range(BEST_DILATION_DEPTH))  # (1, 2, 4, 8, 16)
-
-print(f"\n{'='*70}")
-print(f"OPTUNA-TUNED TCN CONFIGURATION")
-print(f"{'='*70}")
-print(f"Trial: 159 (Best of 163 trials)")
-print(f"Validation Loss: 0.002441")
-print(f"Optimization Time: 28.62 hours")
-print(f"\nHyperparameters:")
-print(f"  Batch Size: {BEST_BATCH_SIZE}")
-print(f"  Learning Rate: {BEST_LR:.6f}")
-print(f"  Blocks: {BEST_N_BLOCKS}")
-print(f"  Kernel Size: {BEST_KERNEL_SIZE}")
-print(f"  Dropout: {BEST_DROPOUT:.4f}")
-print(f"  Hidden Channels: {BEST_HIDDEN_CHANNELS}")
-print(f"  Dilations: {BEST_DILATIONS}")
-print(f"  Step Size: {BEST_STEP_SIZE}")
-print(f"  Gamma: {BEST_GAMMA:.4f}")
-print(f"{'='*70}\n")
 
 # =========================
 # Instrumentation helpers
