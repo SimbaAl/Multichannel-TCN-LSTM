@@ -39,16 +39,16 @@ DSC_IDX = np.array(
 # =========================
 BEST_BATCH_SIZE = 128
 BEST_LR = 0.00047723253464726804
-BEST_N_BLOCKS = 1
-BEST_KERNEL_SIZE = 2
+BEST_N_BLOCKS = 5
+BEST_KERNEL_SIZE = 4
 BEST_DROPOUT = 0.22791870093014122
-BEST_DILATION_DEPTH = 2
-BEST_HIDDEN_CHANNELS = 128
+BEST_DILATION_DEPTH = 5
+BEST_HIDDEN_CHANNELS = 256
 BEST_STEP_SIZE = 11
 BEST_GAMMA = 0.9477107033183908
 
 # Derived
-BEST_DILATIONS = tuple(2 ** i for i in range(BEST_DILATION_DEPTH))  # (1, 2)
+BEST_DILATIONS = tuple(2 ** i for i in range(BEST_DILATION_DEPTH))  # (1, 2, 4, 8, 16)
 
 print(f"\n{'='*70}")
 print(f"OPTUNA-TUNED TCN CONFIGURATION")
@@ -103,7 +103,7 @@ def wnorm(module, name='weight', dim=0):
 class ResidualKLayerCNN(nn.Module):
     """One residual dilated CNN block (non-causal). I/O: (B, Cin, L) -> (B, Chid, L)."""
     def __init__(self, num_inputs=100, hidden_channels=100, kernel_size=2,
-                 dilations=(1,2), dropout=0.05):
+                 dilations=(1,2,4,8), dropout=0.05):
         super().__init__()
         assert len(dilations) >= 2
 
@@ -158,7 +158,7 @@ class ResidualKStack(nn.Module):
     I/O: (B, 100, 52) -> (B, 100, 52)
     """
     def __init__(self, num_inputs=100, hidden_channels=100, kernel_size=2,
-                 dilations=(1,2), dropout=0.05, n_blocks=4, output_size=100):
+                 dilations=(1,2,4,8), dropout=0.05, n_blocks=4, output_size=100):
         super().__init__()
         assert n_blocks >= 1
 
